@@ -2,22 +2,28 @@ pipeline {
     agent any 
 
     stages {
-        stage('Checkout Code') {
+        stage('Test Everything') {
             steps {
-                echo 'Successfully pulled code from GitHub!'
+                echo "Running standard linting and tests on branch: ${env.BRANCH_NAME}"
+                sh 'echo "Tests passed!"'
             }
         }
-        stage('Simulate Environment') {
+
+        stage('Deploy to Staging') {
+            when {
+                branch 'develop'
+            }
             steps {
-                echo 'Checking software versions...'
-                sh 'node -v || true'
-                sh 'npm -v || true'
+                echo 'Simulating deployment to the STAGING environment...'
             }
         }
-        stage('Build & Test') {
+
+        stage('Deploy to Production') {
+            when {
+                branch 'main' // or 'production' depending on what your primary branch is named
+            }
             steps {
-                echo 'Running local sandbox tests...'
-                sh 'echo "All checks passed successfully!"'
+                echo '🚀 Simulating deployment to the PRODUCTION environment!!!'
             }
         }
     }
